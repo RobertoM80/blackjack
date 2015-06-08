@@ -12,8 +12,8 @@ def ask name
   puts "********************************"
 end
 
-def total(cards, total_score)
-  total_score.clear
+def total(cards)
+  #total_score.clear
   score = 0
   valid_card = cards.flatten.select {|card| card.length < 3}
   valid_card.each do |card|
@@ -24,8 +24,9 @@ def total(cards, total_score)
     when card == "A" && score > 10 then score += 1
     end
   end
-  score = score.to_s
-  total_score << score
+  #score = score.to_s
+  score
+  #total_score << score
 end
 
 def dealer_score_at_first_card(dealer_cards, dealer_first_card)
@@ -76,12 +77,12 @@ def dealer_time(deck, dealer_cards, player_cards, player_name, total_score_deale
   elsif total_score_dealer.to_i >= 17 && (total_score_dealer.to_i < total_score_player.to_i && total_score_dealer.to_i < 21)
     puts "Dealer Hit"
     dealer_cards << deck.pop
-    total(dealer_cards, total_score_dealer)
+    total_score_dealer
     have_a_winner.clear << "false"
   else
     puts "Dealer Hit"
     dealer_cards << deck.pop
-    total(dealer_cards, total_score_dealer)
+    total_score_dealer
     have_a_winner.clear << "false"
   end
 end
@@ -104,9 +105,9 @@ while play_again == "y"
 
   dealer_cards = []
 
-  total_score_player = "0"
+  total_score_player = total(player_cards)
 
-  total_score_dealer = "0"
+  total_score_dealer = total(dealer_cards)
 
   dealer_first_card = ""
 
@@ -119,8 +120,8 @@ while play_again == "y"
   player_cards << deck.pop
   dealer_cards << deck.pop
 
-  total(player_cards, total_score_player)
-  total(dealer_cards, total_score_dealer)
+  total_score_player
+  total_score_dealer
   dealer_score_at_first_card(dealer_cards, dealer_first_card)
 
   puts "#{player_name}, you have #{player_cards[0]} and #{player_cards[1]}. Total of #{total_score_player}"
@@ -139,14 +140,17 @@ while play_again == "y"
       end
       break
     elsif hit_or_stay == "1" #player hit
-       another_hit(have_a_winner, player_cards, player_name, total_score_player, dealer_cards, total_score_dealer, deck)
+      another_hit(have_a_winner, player_cards, player_name, total_score_player, dealer_cards, total_score_dealer, deck)
+    else
+      puts "Wrong input..."
+      next
     end
   end 
   puts ""
   puts "Do you want to play again? (y/n)"
   play_again = gets.chomp.downcase
   puts ""
-  if play_again == "n" || play_again != "y"
+  if play_again != "y"
     puts "OK, See you soon.."
   end  
 end  
